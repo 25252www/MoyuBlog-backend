@@ -1,0 +1,9 @@
+server:
+  port: 8080
+moyusoldier:
+  jwt:
+    # 加密秘钥
+    secret: ''
+    # token有效时长，7天，单位秒
+    expire: 604800
+    header: token

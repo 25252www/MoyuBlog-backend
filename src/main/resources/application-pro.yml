@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    # mysql 5.7
+    username: root
+    password: ''
+    url: jdbc:mysql://mysql:3306/moyublog?useUnicode=true&characterEncoding=UTF-8
+    driver-class-name: com.mysql.jdbc.Driver
+
+  jackson:
+    time-zone: GMT+8
