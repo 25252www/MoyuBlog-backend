@@ -21,7 +21,7 @@ public class Blog implements Serializable {
     @NotBlank(message = "标题不能为空")
     private String title;
     private Integer hits;
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime date;
     @NotBlank(message = "摘要不能为空")
     private String description;

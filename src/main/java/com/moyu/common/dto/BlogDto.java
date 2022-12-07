@@ -1,5 +1,7 @@
 package com.moyu.common.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -7,6 +9,7 @@ public class BlogDto implements Serializable {
     private Integer id;
     private String title;
     private Integer hits;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime date;
 
     public BlogDto() {
