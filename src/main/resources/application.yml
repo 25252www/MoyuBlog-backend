@@ -3,7 +3,12 @@ server:
 moyusoldier:
   jwt:
     # 加密秘钥
-    secret: ''
+    key:
     # token有效时长，7天，单位秒
     expire: 604800
     header: token
+  password:
+    # 加密秘钥
+    key:
+logging:
+  config: src/main/resources/logback.xml

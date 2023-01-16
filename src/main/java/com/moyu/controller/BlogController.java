@@ -5,11 +5,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.moyu.common.dto.BlogDto;
+import com.moyu.common.dto.BlogDTO;
 import com.moyu.common.lang.Result;
 import com.moyu.pojo.Blog;
 import com.moyu.service.blog.BlogService;
+import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
@@ -17,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequestMapping("/blogs")
@@ -37,22 +38,23 @@ public class BlogController{
         return Result.succ(pageData);
     }
 
+    @ApiOperation("返回除了description和content的所有列")
     @GetMapping("/all")
     public Result selectAll(){
-        //返回除了discription和content的所有列
+        //返回除了description和content的所有列
         List<Blog> blogList = blogService.list(new QueryWrapper<Blog>().select("id", "title","hits","date").orderByDesc("date"));
-        List<BlogDto> blogDtoList = blogList.stream().map(blog -> {
-            BlogDto blogDto = new BlogDto();
+        List<BlogDTO> blogDTOList = blogList.stream().map(blog -> {
+            BlogDTO blogDto = new BlogDTO();
             BeanUtil.copyProperties(blog, blogDto);
             return blogDto;
         }).collect(Collectors.toList());
-        return Result.succ(blogDtoList);
+        return Result.succ(blogDTOList);
     }
 
     @GetMapping("/{id}")
     public Result getById(@PathVariable(name = "id") Integer id) {
         Blog blog = blogService.getById(id);
-        Assert.notNull(blog, "该博客不存在");
+        Assert.notNull(blog, "博客不存在");
         //点击量+1
         blogService.update(null, new UpdateWrapper<Blog>().eq("id", blog.getId()).set("hits",blog.getHits()+1));
 
@@ -60,6 +62,7 @@ public class BlogController{
     }
 
     @RequiresAuthentication
+    @RequiresRoles("admin")
     @PostMapping("/edit")
     public Result edit(@Validated @RequestBody Blog blog) {
         Blog temp = null;
@@ -79,6 +82,9 @@ public class BlogController{
         blogService.saveOrUpdate(temp);
         return Result.succ(null);
     }
+
+    @RequiresAuthentication
+    @RequiresRoles("admin")
     @GetMapping("/delete/{id}")
     public Result removeById(@PathVariable(name = "id") Integer id){
         boolean b = blogService.removeById(id);

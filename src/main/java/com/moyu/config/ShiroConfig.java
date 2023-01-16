@@ -13,8 +13,6 @@ import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -41,14 +39,15 @@ public class ShiroConfig {
     public DefaultWebSecurityManager securityManager(AccountRealm accountRealm) {
 
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager(accountRealm);
-//        /*
-//         * 关闭shiro自带的session，这样用户就不再能通过session方式登录shiro。后面将采用jwt凭证登录
-//         */
-//        DefaultSubjectDAO subjectDAO = new DefaultSubjectDAO();
-//        DefaultSessionStorageEvaluator defaultSessionStorageEvaluator = new DefaultSessionStorageEvaluator();
-//        defaultSessionStorageEvaluator.setSessionStorageEnabled(false);
-//        subjectDAO.setSessionStorageEvaluator(defaultSessionStorageEvaluator);
-//        securityManager.setSubjectDAO(subjectDAO);
+        /*
+         * 关闭shiro自带的session，这样用户就不再能通过session方式登录shiro。后面将采用jwt凭证登录
+         * http://shiro.apache.org/session-management.html#SessionManagement-StatelessApplications%28Sessionless%29
+         */
+        DefaultSubjectDAO subjectDAO = new DefaultSubjectDAO();
+        DefaultSessionStorageEvaluator defaultSessionStorageEvaluator = new DefaultSessionStorageEvaluator();
+        defaultSessionStorageEvaluator.setSessionStorageEnabled(false);
+        subjectDAO.setSessionStorageEvaluator(defaultSessionStorageEvaluator);
+        securityManager.setSubjectDAO(subjectDAO);
 
         return securityManager;
     }
@@ -62,11 +61,9 @@ public class ShiroConfig {
     @Bean
     public ShiroFilterChainDefinition shiroFilterChainDefinition() {
         DefaultShiroFilterChainDefinition chainDefinition = new DefaultShiroFilterChainDefinition();
-
         Map<String, String> filterMap = new LinkedHashMap<>();
-
+        // 所有请求通过我们自己的JWT Filter
         filterMap.put("/**", "jwt");
-
         chainDefinition.addPathDefinitions(filterMap);
         return chainDefinition;
     }
@@ -110,8 +107,5 @@ public class ShiroConfig {
         authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
         return authorizationAttributeSourceAdvisor;
     }
-
-
-
 
 }

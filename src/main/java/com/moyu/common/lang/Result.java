@@ -1,36 +1,15 @@
 package com.moyu.common.lang;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
-//统一结果封装，没用到
+// 不在代码中显示返回Result.fail()，而是在代码中抛出异常，然后在全局异常处理器中捕获异常并返回Result.fail()
+@Data
 public class Result implements Serializable {
     private int code; // 200是正常，非200表示异常
     private String msg;
     private Object data;
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public Object getData() {
-        return data;
-    }
-
-    public void setData(Object data) {
-        this.data = data;
-    }
 
     public static Result succ(Object data) {
         return succ(200, "操作成功", data);

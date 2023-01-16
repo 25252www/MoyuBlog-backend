@@ -1,35 +1,19 @@
 package com.moyu.shiro;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 
-/**
- * 而在AccountRealm我们还用到了AccountProfile，这是为了登录成功之后返回的一个用户信息的载体
- */
+// 将数据区信息脱敏后交给Shiro，即不包含私密信息
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AccountProfile implements Serializable {
     private Integer id;
     private String username;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    @Override
-    public String toString() {
-        return "AccountProfile{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                '}';
-    }
+    private String role;
+    private String avatar;
+    private String phone;
 }
