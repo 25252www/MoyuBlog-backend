@@ -15,7 +15,6 @@ class BackendApplicationTests {
 
     @Test
     void test() {
-        throw new RuntimeException("测试异常");
     }
 
 }

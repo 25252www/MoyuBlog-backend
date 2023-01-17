@@ -17,7 +17,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -101,7 +100,7 @@ public class AccountController {
     @PostMapping("/register")
     public Result register(@Validated @RequestBody RegisterVO registerVO, HttpServletResponse response) {
         // 一部分校验交给RegisterVO上的注解，一部分校验交给这里
-        Assert.isTrue(registerVO.getPassword().equals(registerVO.getRepassword()), "两次密码不一致");
+        Assert.isTrue(registerVO.getPassword().equals(registerVO.getConfirmPassword()), "两次输入密码不一致!");
         String kaptcha = (String) SecurityUtils.getSubject().getSession().getAttribute(KAPTCHA_SESSION_KEY);
         Assert.isTrue(registerVO.getCode().equalsIgnoreCase(kaptcha), "验证码不正确");
         Assert.isNull(userService.getOne(new QueryWrapper<User>().eq("username", registerVO.getUsername())), "用户名已被注册");

@@ -14,10 +14,10 @@ public class KaptchaConfig {
     public DefaultKaptcha producer() {
         Properties propertis = new Properties();
         propertis.put("kaptcha.border", "no");
-        propertis.put("kaptcha.image.height", "38");
-        propertis.put("kaptcha.image.width", "150");
+        propertis.put("kaptcha.image.height", "30");
+        propertis.put("kaptcha.image.width", "120");
         propertis.put("kaptcha.textproducer.font.color", "black");
-        propertis.put("kaptcha.textproducer.font.size", "32");
+        propertis.put("kaptcha.textproducer.font.size", "24");
         Config config = new Config(propertis);
         DefaultKaptcha defaultKaptcha = new DefaultKaptcha();
         defaultKaptcha.setConfig(config);
