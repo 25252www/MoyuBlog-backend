@@ -1,5 +1,6 @@
 package com.moyu.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.crypto.SecureUtil;
@@ -10,18 +11,17 @@ import com.moyu.common.vo.RegisterVO;
 import com.moyu.common.lang.Result;
 import com.moyu.pojo.User;
 import com.moyu.service.user.UserService;
+import com.moyu.shiro.AccountProfile;
 import com.moyu.utils.JwtUtils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
@@ -31,8 +31,9 @@ import java.awt.image.BufferedImage;
 @Slf4j
 @RestController
 @Data
+@RequestMapping("/user")
 @ConfigurationProperties(prefix = "moyusoldier.password")
-public class AccountController {
+public class UserController {
 
     private String key;
 
@@ -61,18 +62,11 @@ public class AccountController {
         response.setHeader("Authorization", jwt);
         response.setHeader("Access-Control-Expose-Headers", "Authorization");
 
-
-        return Result.succ(MapUtil.builder()
-                .put("username", user.getUsername())
-                .put("role", user.getRole())
-                .put("avatar", user.getAvatar())
-                .put("phone", user.getPhone())
-                .map()
-        );
+        return Result.succ(null);
     }
 
     @RequiresAuthentication
-    @GetMapping("/logout")
+    @PostMapping("/logout")
     public Result logout() {
         SecurityUtils.getSubject().logout();
         return Result.succ(null);
@@ -119,6 +113,16 @@ public class AccountController {
         response.setHeader("Authorization", jwt);
         response.setHeader("Access-Control-Expose-Headers", "Authorization");
 
+        return Result.succ(null);
+    }
+
+    @GetMapping("/info")
+    public Result info(@RequestParam String token) {
+        String userId = jwtUtils.getClaimByToken(token).getSubject();
+        User user = userService.getById(userId);
+        if (user == null) {
+            throw new UnknownAccountException("账户不存在");
+        }
         return Result.succ(MapUtil.builder()
                 .put("username", user.getUsername())
                 .put("role", user.getRole())
