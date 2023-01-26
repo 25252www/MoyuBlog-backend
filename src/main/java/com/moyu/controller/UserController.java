@@ -1,6 +1,5 @@
 package com.moyu.controller;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.crypto.SecureUtil;
@@ -9,9 +8,8 @@ import com.google.code.kaptcha.Producer;
 import com.moyu.common.vo.LoginVO;
 import com.moyu.common.vo.RegisterVO;
 import com.moyu.common.lang.Result;
-import com.moyu.pojo.User;
+import com.moyu.DO.User;
 import com.moyu.service.user.UserService;
-import com.moyu.shiro.AccountProfile;
 import com.moyu.utils.JwtUtils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -123,9 +121,12 @@ public class UserController {
         if (user == null) {
             throw new UnknownAccountException("账户不存在");
         }
+        // 目前只有角色权限（admin/visitor），后续可扩展
+        String[] roles = new String[]{user.getRole()};
         return Result.succ(MapUtil.builder()
+                .put("id", user.getId())
                 .put("username", user.getUsername())
-                .put("role", user.getRole())
+                .put("roles", roles)
                 .put("avatar", user.getAvatar())
                 .put("phone", user.getPhone())
                 .map()

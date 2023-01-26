@@ -1,4 +1,4 @@
-package com.moyu.controller;
+package com.moyu.config;
 
 
 import org.springframework.context.annotation.Configuration;

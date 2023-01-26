@@ -7,9 +7,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moyu.common.dto.BlogDTO;
 import com.moyu.common.lang.Result;
-import com.moyu.pojo.Blog;
+import com.moyu.DO.Blog;
 import com.moyu.service.blog.BlogService;
-import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,23 +25,28 @@ import java.util.stream.Collectors;
 public class BlogController{
 
     @Autowired
-    private BlogService blogService;
+    BlogService blogService;
 
     @GetMapping
     public Result selectOnePage(@RequestParam(defaultValue = "1") Integer currentPage) {
 
-        //一页展示7条数据
+        // 一页展示7条数据
         Page page = new Page(currentPage, 7);
-        IPage pageData = blogService.page(page, new QueryWrapper<Blog>().orderByDesc("date"));
-
+        // 查询数据库不返回content，加快速度
+        IPage pageData = blogService.page(page, new QueryWrapper<Blog>().select("id", "title","hits","date","description").orderByDesc("date"));
+        List<BlogDTO> blogDTOList = (List<BlogDTO>) pageData.getRecords().stream().map(blog -> {
+            BlogDTO blogDto = new BlogDTO();
+            BeanUtil.copyProperties(blog, blogDto);
+            return blogDto;
+        }).collect(Collectors.toList());
+        pageData.setRecords(blogDTOList);
         return Result.succ(pageData);
     }
 
-    @ApiOperation("返回除了description和content的所有列")
     @GetMapping("/all")
     public Result selectAll(){
-        //返回除了description和content的所有列
-        List<Blog> blogList = blogService.list(new QueryWrapper<Blog>().select("id", "title","hits","date").orderByDesc("date"));
+        //返回除了content的所有列
+        List<Blog> blogList = blogService.list(new QueryWrapper<Blog>().select("id", "title","hits","date","description").orderByDesc("date"));
         List<BlogDTO> blogDTOList = blogList.stream().map(blog -> {
             BlogDTO blogDto = new BlogDTO();
             BeanUtil.copyProperties(blog, blogDto);

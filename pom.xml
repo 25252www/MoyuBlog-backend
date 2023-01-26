@@ -27,10 +27,6 @@
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-freemarker</artifactId>
-        </dependency>
         <!--mysql-->
         <dependency>
             <groupId>mysql</groupId>
@@ -63,7 +59,7 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.1.0</version>
+            <version>3.2.0</version>
         </dependency>
         <!--hutool-->
         <dependency>
@@ -130,11 +126,11 @@
             <artifactId>kaptcha</artifactId>
             <version>0.0.9</version>
         </dependency>
-        <dependency>
-            <groupId>com.jhlabs</groupId>
-            <artifactId>filters</artifactId>
-            <version>2.0.235</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.jhlabs</groupId>-->
+<!--            <artifactId>filters</artifactId>-->
+<!--            <version>2.0.235</version>-->
+<!--        </dependency>-->
     </dependencies>
 
 </project>

@@ -2,7 +2,7 @@ package com.moyu.shiro;
 
 
 import cn.hutool.core.bean.BeanUtil;
-import com.moyu.pojo.User;
+import com.moyu.DO.User;
 import com.moyu.service.user.UserService;
 import com.moyu.utils.JwtUtils;
 import lombok.extern.slf4j.Slf4j;

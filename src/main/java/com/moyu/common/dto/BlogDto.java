@@ -17,5 +17,6 @@ public class BlogDTO implements Serializable {
     private Integer hits;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime date;
+    private String description;
 
 }
