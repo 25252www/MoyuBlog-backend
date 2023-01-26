@@ -10,5 +10,3 @@ moyusoldier:
   password:
     # 加密秘钥
     key:
-logging:
-  config: src/main/resources/logback.xml

@@ -21,5 +21,8 @@ services:
     build: . # 表示以当前目录下的Dockerfile开始构建镜像
     ports:
       - 8080:8080
+    volumes: # 挂载 宿主机:容器
+      - /root/moyublog/logs:/logs
+    privileged: true # 这个必须要，解决nginx的文件调用的权限问题
     depends_on: # 依赖与mysql，其实可以不填，默认已经表示可以
       - mysql

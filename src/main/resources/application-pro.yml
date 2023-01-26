@@ -1,8 +1,8 @@
 spring:
   datasource:
     # mysql 5.7
-    username: ''
-    password: ''
+    username:
+    password:
     url: jdbc:mysql://mysql:3306/moyublog?useUnicode=true&characterEncoding=UTF-8
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
