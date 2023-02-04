@@ -102,7 +102,7 @@ public class UserController {
         user.setPassword(SecureUtil.hmacSha1(key).digestHex(registerVO.getPassword()));
         user.setRole("visitor");
         user.setPhone(registerVO.getPhone());
-        Boolean bool = userService.save(user);
+        boolean bool = userService.save(user);
         Assert.isTrue(bool, "注册失败");
         // 生成jwt
         // 从数据库获得userid
