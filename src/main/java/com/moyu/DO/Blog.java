@@ -30,11 +30,16 @@ public class Blog implements Serializable {
     private Integer hits;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime date;
+    private LocalDateTime createTime;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime updateTime;
 
     @NotBlank(message = "摘要不能为空")
     private String description;
 
     @NotBlank(message = "内容不能为空")
     private String content;
+
+    private Boolean deleted;
 }

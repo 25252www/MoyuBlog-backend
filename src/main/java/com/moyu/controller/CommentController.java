@@ -86,7 +86,6 @@ public class CommentController {
                 queue.add(comment.getId());
             }
         }
-        System.out.println(commentIds);
 
         // 批量更新deleted字段为1
         UpdateWrapper<Comment> updateWrapper = new UpdateWrapper<>();

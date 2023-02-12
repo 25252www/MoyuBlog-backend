@@ -2,11 +2,11 @@ server:
   port: 8080
 moyusoldier:
   jwt:
-    # 加密秘钥
+    # jwt加密秘钥
     key:
     # token有效时长，7天，单位秒
     expire: 604800
     header: token
   password:
-    # 加密秘钥
+    # 数据库存密码用的hmacSha1的加密秘钥
     key:

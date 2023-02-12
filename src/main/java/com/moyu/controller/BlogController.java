@@ -32,8 +32,8 @@ public class BlogController{
 
         // 一页展示7条数据
         Page page = new Page(currentPage, 7);
-        // 查询数据库不返回content，加快速度
-        IPage pageData = blogService.page(page, new QueryWrapper<Blog>().select("id", "title","hits","date","description").orderByDesc("date"));
+        // 返回("id", "title","hits","create_time","description")，只查询deleted为0的数据，按照create_time降序排列
+        IPage pageData = blogService.page(page, new QueryWrapper<Blog>().select("id", "title","hits","create_time","description").eq("deleted", 0).orderByDesc("create_time"));
         List<BlogDTO> blogDTOList = (List<BlogDTO>) pageData.getRecords().stream().map(blog -> {
             BlogDTO blogDto = new BlogDTO();
             BeanUtil.copyProperties(blog, blogDto);
@@ -43,10 +43,11 @@ public class BlogController{
         return Result.succ(pageData);
     }
 
+    @RequiresAuthentication
     @GetMapping("/all")
     public Result selectAll(){
-        //返回除了content的所有列
-        List<Blog> blogList = blogService.list(new QueryWrapper<Blog>().select("id", "title","hits","date","description").orderByDesc("date"));
+        // 返回("id", "title","hits","create_time","description")，按照create_time降序排列
+        List<Blog> blogList = blogService.list(new QueryWrapper<Blog>().select("id", "title","hits","create_time","description").orderByDesc("create_time"));
         List<BlogDTO> blogDTOList = blogList.stream().map(blog -> {
             BlogDTO blogDto = new BlogDTO();
             BeanUtil.copyProperties(blog, blogDto);
@@ -68,22 +69,10 @@ public class BlogController{
     @RequiresAuthentication
     @RequiresRoles("admin")
     @PostMapping("/edit")
+    // 前端只传来id, title, description, content，若id为空，则为新增文章，否则为编辑文章
     public Result edit(@Validated @RequestBody Blog blog) {
-        Blog temp = null;
-        //id不为空，是编辑
-        if(blog.getId() != null) {
-            temp = blogService.getById(blog.getId());
-            //编辑文章日期不变
-            BeanUtil.copyProperties(blog, temp, "id", "date");
-        }
-        //添加新文章
-        else {
-            temp = new Blog();
-            temp.setDate(LocalDateTime.now());
-            //新增文章，日期为当前时间
-            BeanUtil.copyProperties(blog, temp, "id");
-        }
-        blogService.saveOrUpdate(temp);
+        boolean b = blogService.saveOrUpdate(blog);
+        Assert.isTrue(b,"操作失败");
         return Result.succ(null);
     }
 
@@ -91,7 +80,8 @@ public class BlogController{
     @RequiresRoles("admin")
     @GetMapping("/delete/{id}")
     public Result removeById(@PathVariable(name = "id") Integer id){
-        boolean b = blogService.removeById(id);
+        // 逻辑删除
+        boolean b = blogService.update(new UpdateWrapper<Blog>().eq("id", id).set("deleted", 1));
         Assert.isTrue(b,"删除失败");
         return Result.succ(null);
     }
