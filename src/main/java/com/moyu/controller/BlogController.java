@@ -78,7 +78,7 @@ public class BlogController{
 
     @RequiresAuthentication
     @RequiresRoles("admin")
-    @GetMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public Result removeById(@PathVariable(name = "id") Integer id){
         // 逻辑删除
         boolean b = blogService.update(new UpdateWrapper<Blog>().eq("id", id).set("deleted", 1));

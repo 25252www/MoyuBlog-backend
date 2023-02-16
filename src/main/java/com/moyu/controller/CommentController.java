@@ -21,13 +21,12 @@ import java.util.List;
 import java.util.Queue;
 
 @RestController
-@RequestMapping("/comment")
 public class CommentController {
 
     @Autowired
     CommentService commentService;
 
-    @GetMapping("/{blogId}")
+    @GetMapping("/blogs/{blogId}/comments")
     public Result generateCommentsByBlogId(@PathVariable("blogId") Integer blogId) {
         List<CommentDTO> commentsList = commentService.generateCommentDTOListByBlogId(blogId);
         List<CommentDTO> res = new ArrayList<>();
@@ -57,7 +56,7 @@ public class CommentController {
     }
 
     @RequiresAuthentication
-    @PostMapping("/add")
+    @PostMapping("/comments")
     public Result addComment(@Validated @RequestBody Comment comment) {
         // todo:校验参数
 //        System.out.println(comment);
@@ -67,7 +66,7 @@ public class CommentController {
     }
 
     @RequiresAuthentication
-    @GetMapping("/delete/{id}")
+    @DeleteMapping("/comments/{id}")
     public Result deleteComment(@PathVariable("id") Integer id) {
         // 只有当前用户为admin或者是评论的作者，才能删除评论
         AccountProfile accountProfile = (AccountProfile) SecurityUtils.getSubject().getPrincipal();
