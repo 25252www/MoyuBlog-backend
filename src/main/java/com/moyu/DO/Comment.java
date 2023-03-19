@@ -40,5 +40,7 @@ public class Comment implements Serializable {
     @NotBlank(message = "评论内容不能为空")
     private String content;
 
+    private String ipPossession;
+
     private Integer deleted;
 }

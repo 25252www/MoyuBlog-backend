@@ -9,12 +9,14 @@ import com.moyu.common.dto.CommentDTO;
 import com.moyu.common.lang.Result;
 import com.moyu.service.comment.CommentService;
 import com.moyu.shiro.AccountProfile;
+import com.moyu.utils.IPUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -57,9 +59,12 @@ public class CommentController {
 
     @RequiresAuthentication
     @PostMapping("/comments")
-    public Result addComment(@Validated @RequestBody Comment comment) {
-        // todo:校验参数
-//        System.out.println(comment);
+    public Result addComment(@Validated @RequestBody Comment comment, HttpServletRequest request) throws Exception {
+        // 获取ip属地
+        String ipAddr = IPUtils.getIpAddr(request);
+        String ipPossession = IPUtils.getIpPossession(ipAddr);
+        comment.setIpPossession(ipPossession);
+
         Boolean bool = commentService.save(comment);
         Assert.isTrue(bool, "评论失败");
         return Result.succ(null);
