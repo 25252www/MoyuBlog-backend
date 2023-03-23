@@ -1,5 +1,5 @@
 # MoyuBlog -BackEnd
-[摸鱼战士的小站](http://moyusoldier.cloud)-后端
+[摸鱼战士的小站](http://moyusoldier.cn)-后端
 
 ## 技术栈
 - Springboot 
