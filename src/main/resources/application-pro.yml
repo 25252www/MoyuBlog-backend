@@ -1,5 +1,6 @@
 spring:
   datasource:
+    # 生产环境
     # mysql 5.7
     username:
     password:
@@ -8,5 +9,6 @@ spring:
     hikari:
       max-lifetime: 60000
       idle-timeout: 20000
+
   jackson:
     time-zone: GMT+8

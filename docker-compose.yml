@@ -15,7 +15,7 @@ services:
     ports:
       - 3306:3306
     environment: # 指定用户root的密码
-      - MYSQL_ROOT_PASSWORD=lxy200131
+      - MYSQL_ROOT_PASSWORD=
   moyublog:
     image: moyublog:latest
     build: . # 表示以当前目录下的Dockerfile开始构建镜像

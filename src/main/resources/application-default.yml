@@ -1,5 +1,6 @@
 spring:
   datasource:
+    # 本地环境
     # 直接连远程 mysql 5.7
     username:
     password:
